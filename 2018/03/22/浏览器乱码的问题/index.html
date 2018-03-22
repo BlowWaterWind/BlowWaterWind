@@ -86,14 +86,14 @@
 <meta property="og:site_name" content="江西吹水旅游">
 <meta property="og:description" content="乱码问题今天遇到的问题，加密的结果经过URLEncode后作为浏览器的url传给后台，自己想着给这部分URLDecode解码，发现验证的结果为false. 原因:从浏览器进入后台，会自动进行一次URLDecode get请求对中文字符需要两次编码原因:  servlet中调用request.getParameter();方法的时候使用服务器指定的编码格式自动解码一次 对非中文的utf-8编码和IS">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/浏览器乱码的问题/1.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/浏览器乱码的问题/2.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/浏览器乱码的问题/3.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/1.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/2.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/3.png">
 <meta property="og:updated_time" content="2018-03-22T14:44:04.759Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浏览器乱码的问题">
 <meta name="twitter:description" content="乱码问题今天遇到的问题，加密的结果经过URLEncode后作为浏览器的url传给后台，自己想着给这部分URLDecode解码，发现验证的结果为false. 原因:从浏览器进入后台，会自动进行一次URLDecode get请求对中文字符需要两次编码原因:  servlet中调用request.getParameter();方法的时候使用服务器指定的编码格式自动解码一次 对非中文的utf-8编码和IS">
-<meta name="twitter:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/浏览器乱码的问题/1.png">
+<meta name="twitter:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/1.png">
 
 
 
@@ -332,9 +332,9 @@
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//看例子</span></span><br><span class="line">encodeURIComponent(encodeURIComponent(<span class="string">"谢江琼"</span>)); </span><br><span class="line"><span class="string">"%25E8%25B0%25A2%25E6%25B1%259F%25E7%2590%25BC"</span></span><br><span class="line">encodeURIComponent(<span class="string">"谢江琼"</span>)</span><br><span class="line"><span class="string">"%E8%B0%A2%E6%B1%9F%E7%90%BC"</span></span><br><span class="line">    </span><br><span class="line">String name = <span class="string">"谢江琼"</span>;</span><br><span class="line">String encode1 = URLEncoder.encode(name,<span class="string">"UTF-8"</span>);<span class="comment">//%E8%B0%A2%E6%B1%9F%E7%90%BC</span></span><br><span class="line">String encode2 = URLEncoder.encode(encode1,<span class="string">"UTF-8"</span>);<span class="comment">//%25E8%25B0%25A2%25E6%25B1%259F%25E7%2590%25BC</span></span><br><span class="line">String decode1 = URLDecoder.decode(encode2,<span class="string">"ISO-8859-1"</span>);<span class="comment">//%E8%B0%A2%E6%B1%9F%E7%90%BC</span></span><br><span class="line">String decode2 = URLDecoder.decode(decode1,<span class="string">"UTF-8"</span>);<span class="comment">// 谢江琼</span></span><br></pre></td></tr></table></figure>
 <p>所以需要前台两次utf-8编码，后台默认一次ISO-8859-1解码，再手动一次UTF-8的解码获得原先的值。</p>
-<h3 id="浏览器的执行结果"><a href="#浏览器的执行结果" class="headerlink" title="浏览器的执行结果"></a>浏览器的执行结果</h3><p><img src="浏览器乱码的问题/1.png" alt=""></p>
-<p><img src="浏览器乱码的问题/2.png" alt=""></p>
-<p><img src="浏览器乱码的问题/3.png" alt=""></p>
+<h3 id="浏览器的执行结果"><a href="#浏览器的执行结果" class="headerlink" title="浏览器的执行结果"></a>浏览器的执行结果</h3><p><img src="/2018/03/22/浏览器乱码的问题/1.png" alt=""></p>
+<p><img src="/2018/03/22/浏览器乱码的问题/2.png" alt=""></p>
+<p><img src="/2018/03/22/浏览器乱码的问题/3.png" alt=""></p>
 <p>以上:</p>
 <ol>
 <li>进入后台自动解码一次,使用的是servlet的默认解码ISO-8859-1解码。</li>
