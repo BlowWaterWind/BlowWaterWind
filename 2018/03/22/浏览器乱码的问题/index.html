@@ -79,14 +79,21 @@
 
 
 
+<meta name="description" content="乱码问题今天遇到的问题，加密的结果经过URLEncode后作为浏览器的url传给后台，自己想着给这部分URLDecode解码，发现验证的结果为false. 原因:从浏览器进入后台，会自动进行一次URLDecode get请求对中文字符需要两次编码原因:  servlet中调用request.getParameter();方法的时候使用服务器指定的编码格式自动解码一次 对非中文的utf-8编码和IS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浏览器乱码的问题">
 <meta property="og:url" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/index.html">
 <meta property="og:site_name" content="江西吹水旅游">
+<meta property="og:description" content="乱码问题今天遇到的问题，加密的结果经过URLEncode后作为浏览器的url传给后台，自己想着给这部分URLDecode解码，发现验证的结果为false. 原因:从浏览器进入后台，会自动进行一次URLDecode get请求对中文字符需要两次编码原因:  servlet中调用request.getParameter();方法的时候使用服务器指定的编码格式自动解码一次 对非中文的utf-8编码和IS">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-22T07:30:04.989Z">
+<meta property="og:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/浏览器乱码的问题/1.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/浏览器乱码的问题/2.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/浏览器乱码的问题/3.png">
+<meta property="og:updated_time" content="2018-03-22T14:44:04.759Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浏览器乱码的问题">
+<meta name="twitter:description" content="乱码问题今天遇到的问题，加密的结果经过URLEncode后作为浏览器的url传给后台，自己想着给这部分URLDecode解码，发现验证的结果为false. 原因:从浏览器进入后台，会自动进行一次URLDecode get请求对中文字符需要两次编码原因:  servlet中调用request.getParameter();方法的时候使用服务器指定的编码格式自动解码一次 对非中文的utf-8编码和IS">
+<meta name="twitter:image" content="http://yoursite.com/2018/03/22/浏览器乱码的问题/浏览器乱码的问题/1.png">
 
 
 
@@ -316,7 +323,32 @@
       
 
       
-        
+        <h2 id="乱码问题"><a href="#乱码问题" class="headerlink" title="乱码问题"></a>乱码问题</h2><p>今天遇到的问题，加密的结果经过URLEncode后作为浏览器的url传给后台，自己想着给这部分URLDecode解码，发现验证的结果为false.</p>
+<p>原因:从浏览器进入后台，会自动进行一次URLDecode</p>
+<h3 id="get请求对中文字符需要两次编码"><a href="#get请求对中文字符需要两次编码" class="headerlink" title="get请求对中文字符需要两次编码"></a>get请求对中文字符需要两次编码</h3><p>原因:</p>
+<ol>
+<li>servlet中调用request.getParameter();方法的时候使用服务器指定的编码格式自动解码一次</li>
+<li>对非中文的utf-8编码和ISO-8859-1解码的结果相同</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//看例子</span></span><br><span class="line">encodeURIComponent(encodeURIComponent(<span class="string">"谢江琼"</span>)); </span><br><span class="line"><span class="string">"%25E8%25B0%25A2%25E6%25B1%259F%25E7%2590%25BC"</span></span><br><span class="line">encodeURIComponent(<span class="string">"谢江琼"</span>)</span><br><span class="line"><span class="string">"%E8%B0%A2%E6%B1%9F%E7%90%BC"</span></span><br><span class="line">    </span><br><span class="line">String name = <span class="string">"谢江琼"</span>;</span><br><span class="line">String encode1 = URLEncoder.encode(name,<span class="string">"UTF-8"</span>);<span class="comment">//%E8%B0%A2%E6%B1%9F%E7%90%BC</span></span><br><span class="line">String encode2 = URLEncoder.encode(encode1,<span class="string">"UTF-8"</span>);<span class="comment">//%25E8%25B0%25A2%25E6%25B1%259F%25E7%2590%25BC</span></span><br><span class="line">String decode1 = URLDecoder.decode(encode2,<span class="string">"ISO-8859-1"</span>);<span class="comment">//%E8%B0%A2%E6%B1%9F%E7%90%BC</span></span><br><span class="line">String decode2 = URLDecoder.decode(decode1,<span class="string">"UTF-8"</span>);<span class="comment">// 谢江琼</span></span><br></pre></td></tr></table></figure>
+<p>所以需要前台两次utf-8编码，后台默认一次ISO-8859-1解码，再手动一次UTF-8的解码获得原先的值。</p>
+<h3 id="浏览器的执行结果"><a href="#浏览器的执行结果" class="headerlink" title="浏览器的执行结果"></a>浏览器的执行结果</h3><p><img src="浏览器乱码的问题/1.png" alt=""></p>
+<p><img src="浏览器乱码的问题/2.png" alt=""></p>
+<p><img src="浏览器乱码的问题/3.png" alt=""></p>
+<p>以上:</p>
+<ol>
+<li>进入后台自动解码一次,使用的是servlet的默认解码ISO-8859-1解码。</li>
+</ol>
+<p>但是对”%25E8%25B0%25A2%25E6%25B1%259F%25E7%2590%25BC” 非中的串，UTF-8和ISO-8859-1解码结果相同。因此不会出现乱码。</p>
+<ol>
+<li>获得get请求的参数</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String string = request.getQueryString();</span><br><span class="line"><span class="comment">/*获得是不会被解码的串</span></span><br><span class="line"><span class="comment">比如客户端发送http://localhost/test.do?a=b&amp;c=d&amp;e=f通过request.getQueryString()得到的是a=b&amp;c=d&amp;e=f</span></span><br><span class="line"><span class="comment">API 中注释写到：’</span></span><br><span class="line"><span class="comment">意思是：获取带参数查询。</span></span><br><span class="line"><span class="comment">post方法传的参数，getQueryString（）得不到，</span></span><br><span class="line"><span class="comment">它只对get方法得到的数据有效。*/</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>URLEncode.decode()方法会将+编码为空格。会导致一些小问题。</li>
+</ol>
+<p><a href="http://blog.csdn.net/kongqz/article/details/9028111" target="_blank" rel="noopener">参考博客</a></p>
+
       
     </div>
     
@@ -384,8 +416,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -394,7 +435,7 @@
                 alt="blowwater" />
             
               <p class="site-author-name" itemprop="name">blowwater</p>
-              <p class="site-description motion-element" itemprop="description">入门AI</p>
+              <p class="site-description motion-element" itemprop="description">吹水旅游 到处旅游</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -422,13 +463,13 @@
             
               
                 <span class="links-of-author-item">
-                  <a href="https://github.com/ccwhale" target="_blank" title="GitHub">
+                  <a href="https://github.com/BlowWaterWind" target="_blank" title="GitHub">
                     
                       <i class="fa fa-fw fa-github"></i>GitHub</a>
                 </span>
               
                 <span class="links-of-author-item">
-                  <a href="mailto:392629711@qq.com" target="_blank" title="E-Mail">
+                  <a href="mailto:2905040822@qq.com" target="_blank" title="E-Mail">
                     
                       <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
                 </span>
@@ -447,6 +488,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#乱码问题"><span class="nav-number">1.</span> <span class="nav-text">乱码问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#get请求对中文字符需要两次编码"><span class="nav-number">1.1.</span> <span class="nav-text">get请求对中文字符需要两次编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器的执行结果"><span class="nav-number">1.2.</span> <span class="nav-text">浏览器的执行结果</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
